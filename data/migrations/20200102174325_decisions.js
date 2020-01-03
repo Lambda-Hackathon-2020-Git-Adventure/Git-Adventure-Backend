@@ -3,7 +3,7 @@ exports.up = function(knex) {
         tbl.increments();
         tbl.string('name')
             .notNullable();
-        tbl.string('text')
+        tbl.string('text', 9001)
             .notNullable();
         tbl.integer('story_id')
             .notNullable()

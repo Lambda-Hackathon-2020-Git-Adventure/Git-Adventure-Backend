@@ -11,7 +11,7 @@ exports.up = function(knex) {
             .onDelete('CASCADE');
         tbl.string('title')
             .notNullable()
-        tbl.string('description')
+        tbl.string('description', 9001)
         tbl.varchar('image');
     });
 };
