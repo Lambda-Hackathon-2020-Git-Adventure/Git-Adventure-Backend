@@ -14,7 +14,7 @@ router.post('/signup', validateAuth, (req,res) => {
 });
 
 router.post('/login', validateAuth, (req, res) => {
-  Auth.getUser(req.user.username)
+  Auth.getUserById(req.user.username)
     .then(user => {
       if (user && bcrypt.compareSync(req.user.password, user.password)) {
         const token = generateToken(user);
