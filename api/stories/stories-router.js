@@ -43,7 +43,7 @@ router.get('/mine', verifyToken, async (req, res) => {
         return {...story, collaborators}
       })
       Promise.all(re)
-        .then(ans => res.status(200).json({createdStories: result.createdStories, collaboratedOn: ans}))
+        .then(ans => res.status(200).json({createdStories: result.createdStories, collaboratingOn: ans}))
         
       })
 
