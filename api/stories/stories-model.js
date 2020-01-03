@@ -33,7 +33,6 @@ module.exports = {
 function getAll() {
   return db('stories')
     .join('users', 'users.id', 'stories.creator')
-    .where({'stories.published': 1})
     .select('stories.id', 'users.username as creator', 'stories.title','stories.description','stories.image')
 }
 
@@ -113,13 +112,13 @@ async function findMine(user_id){
       db('stories as s')
       .where({'s.creator': user_id})
       .join('users as u', 's.creator', 'u.id')
-      .select('s.title', 's.description', 'u.username as creator', 's.image', 's.published'),
+      .select('s.id', 's.title', 's.description', 'u.username as creator', 's.image'),
       //get stories that a user is a collaborator for
       db('collaborators as c')
       .where({'c.collaborator': user_id})
       .join('stories as s', 'c.story', 's.id')
       .join('users as u', 'c.collaborator', 'u.id')
-      .select('s.title', 's.description', 'u.username as creator', 's.image', 's.published')
+      .select('s.id', 's.title', 's.description', 'u.username as creator', 's.image')
     ]);
     const [createdStories, collaboratingOn] = result;
     return {createdStories, collaboratingOn};
