@@ -21,7 +21,13 @@ const verifyToken = require('../../auth/authenticate-middleware')
 //get stories
 router.get('/', (req, res) => {
   Stories.getAll()
-    .then(stories => res.status(200).json({ stories }));
+    .then(stories => 
+      stories.forEach(async (story, idx) => {
+        await Stories.getCollaborators(story.id)
+          .then(collaborators => stories[idx].collaborators = collaborators)
+        res.status(200).json({stories})
+      })
+    );
 });
 
 //get stories that a user created/is a collaborator on
