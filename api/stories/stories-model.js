@@ -47,15 +47,15 @@ function getById(id) {
 
 function getCollaborators(id) {
   return db('collaborators as c')
-    .whereRaw(`c.story == ${id}`)
+    .where({'c.story': id})
     .join('users as u', 'u.id', 'c.collaborator')
     .select('u.username')
 }
 
 async function add(story) {
   try{
-      const id = await db('stories')
-      .insert(story);
+      const [id] = await db('stories')
+      .insert(story, 'id');
       return getById(id)
   }catch(err){
     console.log(err);
@@ -85,7 +85,7 @@ function remove(id) {
 
 function addUser(collaborator) {
   return db('collaborators')
-    .insert(collaborator)
+    .insert(collaborator, 'id')
 }
 
 function removeUser(userId, storyId) {
