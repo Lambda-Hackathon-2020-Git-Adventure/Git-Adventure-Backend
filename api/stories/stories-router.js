@@ -34,7 +34,15 @@ router.get('/', (req, res) => {
 router.get('/mine', verifyToken, async (req, res) => {
   try{
     const result = await Stories.findMine(req.user.id);
-    res.status(200).json(result);
+    await result.createdStories.forEach(async (story, idx) => {
+      const collaborators = await Stories.getCollaborators(story.id)
+      result.createdStories[idx].collaborators = collaborators;
+      await result.collaboratingOn.forEach(async (story, idx) => {
+        const collaborators = await Stories.getCollaborators(story.id)
+        result.collaboratingOn[idx].collaborators = collaborators;
+        res.status(200).json(result);
+      })
+    })
   } catch(err){
     console.log(err);
     res.status(500).json({message: 'Error retrieving stories.'})
