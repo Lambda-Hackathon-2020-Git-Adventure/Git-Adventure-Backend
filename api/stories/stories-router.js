@@ -55,7 +55,7 @@ router.post('/', [verifyToken, validateStory], (req, res) => {
 });
 
 // add collaborator to story
-router.post('/:id/collaborator', [findStory, validStory, verifyToken, findUser], (req, res) => {
+router.post('/:id/collaborator', [verifyToken, findStory, validateStory, findUser], (req, res) => {
   Stories.addUser({story: req.params.id, collaborator: req.user.id})
     .then(data => {
       res.status(201).json({message: `${req.user.username} successfully added as a collaborator.`})
