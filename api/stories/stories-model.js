@@ -117,7 +117,7 @@ async function findMine(user_id){
       db('collaborators as c')
       .where({'c.collaborator': user_id})
       .join('stories as s', 'c.story', 's.id')
-      .join('users as u', 'c.collaborator', 'u.id')
+      .join('users as u', 's.creator', 'u.id')
       .select('s.id', 's.title', 's.description', 'u.username as creator', 's.image')
     ]);
     const [createdStories, collaboratingOn] = result;
