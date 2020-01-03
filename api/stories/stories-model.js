@@ -33,13 +33,13 @@ module.exports = {
 function getAll() {
   return db('stories')
     .join('users', 'users.id', 'stories.creator')
-    .whereRaw(`stories.published == ${true}`)
+    .where({'stories.published': 1})
     .select('stories.id', 'users.username as creator', 'stories.title','stories.description','stories.image')
 }
 
 function getById(id) {
   return db('stories')
-    .whereRaw(`stories.id == ${id}`)
+    .where({'stories.id': id})
     .join('users', 'users.id', 'stories.creator')
     .select('stories.id', 'users.username as creator', 'stories.title','stories.description','stories.image')
     .first();
