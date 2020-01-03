@@ -1,6 +1,7 @@
 
 exports.up = function(knex) {
     return knex.schema.createTable('collaborators', tbl => {
+      tbl.increments();
       tbl.integer("collaborator")
         .references('id')
         .inTable('users')
