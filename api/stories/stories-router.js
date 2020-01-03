@@ -55,7 +55,7 @@ router.post('/', [verifyToken, validateStory], (req, res) => {
 });
 
 // add collaborator to story
-router.post('/:id/collaborator', [findStory, findUser], (req, res) => {
+router.post('/:id/collaborator', [findStory, validStory, verifyToken, findUser], (req, res) => {
   Stories.addUser({story: req.params.id, collaborator: req.user.id})
     .then(data => {
       res.status(201).json({message: `${req.user.username} successfully added as a collaborator.`})
@@ -63,6 +63,7 @@ router.post('/:id/collaborator', [findStory, findUser], (req, res) => {
     .catch(err => {res.status(500).json({message: "Error adding to database"})});
 });
 
+// update story
 router.put('/:id', [verifyToken, findStory, validAction], (req, res) => {
   const { title, description, image } = req.body;
   Stories.edit(req.params.id, {title, description, image})
@@ -70,13 +71,14 @@ router.put('/:id', [verifyToken, findStory, validAction], (req, res) => {
     .catch(err => res.status(500).json({message: "Error updating database"}));
 });
 
-//delete story
+// delete story
 router.delete('/:id', [verifyToken, findStory, validAction], (req, res) => {
   Stories.remove(req.params.id)
     .then(records => res.status(201).json({ records }))
     .catch(err => res.status(500).json({message: "Error deleting"}));
 });
 
+//delete collaborator from story
 router.delete('/:id/:username', [verifyToken, findStory, findUserAndValidate], (req, res) => {
   const { collaborator, story } = req.collaborator
   Stories.removeUser(collaborator, story)

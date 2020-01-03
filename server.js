@@ -13,8 +13,8 @@ server.use(helmet());
 server.use(cors());
 server.use(express.json());
 server.use('/api/auth', authRouter);
-server.use('/api/stories', authenticate, storiesRouter);
-server.use('/api/nodes', authenticate, nodesRouter);
+server.use('/api/stories', storiesRouter);
+server.use('/api/nodes', nodesRouter);
 
 server.get("/", (req, res) => {
   res.send("Welcome to Git Adventure API")

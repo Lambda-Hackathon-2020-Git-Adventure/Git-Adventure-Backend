@@ -9,13 +9,11 @@
 //  MM         MM      MM MM M  `Mb'  MM MM YM.    MM M    \MM\M        M    \MM\M MM       M M    \MM\M MM     `M' MM            MM     
 //  YM      6  MM      MM MM M   YP   MM MM  YM.   MM M     \MMM        M     \MMM YM       M M     \MMM YM      M  MM            MM     
 //   8b    d9  MM      MM MM M   `'   MM MM   YM.  MM M      \MM        M      \MM  8b     d8 M      \MM  8b    d9  MM      /     MM     
-//    YMMMM9  _MM_    _MM_MM_M_      _MM_MM_   YM._MM_M_      \M       _M_      \M   YMMMMM9 _M_      \M   YMMMM9  _MMMMMMMMM    _MM_    
-                                                                                                                                      
-                                                                                                                                      
-                                                                                                                                      
+//    YMMMM9  _MM_    _MM_MM_M_      _MM_MM_   YM._MM_M_      \M       _M_      \M   YMMMMM9 _M_      \M   YMMMM9  _MMMMMMMMM    _MM_                                                                                                                                                                                                                                                                                                                                                                                                                    
 
 const router = require('express').Router();
 const nodesDb = require('./nodes-model');
+const authenticate = require('../../auth/authenticate-middleware');
 
 //get all nodes with their parents/children for a story
 router.get('/story/:story_id', async (req, res) => {
@@ -61,7 +59,7 @@ router.get('/:id', async (req, res) => {
 // 		"image": "https://google.com"
 // 	}
 // }
-router.post('/', async (req, res) => {
+router.post('/', authenticate, async (req, res) => {
     try{
         const {node} = req.body;
         if(node){
@@ -78,7 +76,7 @@ router.post('/', async (req, res) => {
 });
 
 //connect node to parent :)
-router.post('/:parent_id/connect/:child_id', async (req, res) => {
+router.post('/:parent_id/connect/:child_id', authenticate, async (req, res) => {
     const {parent_id, child_id} = req.params;
     try{
         const result = await nodesDb.connectNode({parent_id, child_id});
@@ -90,7 +88,7 @@ router.post('/:parent_id/connect/:child_id', async (req, res) => {
 });
 
 //add node to parent :)
-router.post('/:parent_id/createandconnect', async (req, res) => {
+router.post('/:parent_id/createandconnect', authenticate, async (req, res) => {
     const {parent_id} = req.params;
     const {node} = req.body;
     try{
@@ -113,7 +111,7 @@ router.post('/:parent_id/createandconnect', async (req, res) => {
 // 	}
 // }
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticate, async (req, res) => {
     const {id} = req.params;
     const {node} = req.body;
     try{
@@ -129,7 +127,7 @@ router.put('/:id', async (req, res) => {
 });
 
 //delete node
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticate, async (req, res) => {
     const {id} = req.params;
 
     const deleted = await nodesDb.deleteNode(id);
