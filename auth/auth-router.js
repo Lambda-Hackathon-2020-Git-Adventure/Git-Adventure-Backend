@@ -14,12 +14,15 @@ router.post('/signup', validateAuth, (req,res) => {
 });
 
 router.post('/login', validateAuth, (req, res) => {
-  Auth.getUserById(req.user.username)
+  const { username, password } = req.body;
+
+  Auth.getUser(username)
     .then(user => {
-      if (user && bcrypt.compareSync(req.user.password, user.password)) {
+      if (user && bcrypt.compareSync(password, user.password)) {
         const token = generateToken(user);
         res.status(201).json({token});
       } else {
+        console.log('that', user)
         res.status(403).json({message:"Incorrect Credentials"});
       }
     })

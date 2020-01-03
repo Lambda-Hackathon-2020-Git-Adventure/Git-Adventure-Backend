@@ -17,6 +17,7 @@ const db = require('../data/db-config');
 
 module.exports = {
   register,
+  getUser,
   getUserById,
   updateUser,
   remove
@@ -25,6 +26,12 @@ module.exports = {
 // ['id'] returns id for user 
 function register(user) {
   return db('users').insert(user, ['id'])
+}
+
+function getUser(username) {
+  console.log('username is: ', username);
+  return db('users').where({ username })
+    .first();
 }
 
 function getUserById(id) {
