@@ -24,6 +24,17 @@ router.get('/', (req, res) => {
     .then(stories => res.status(200).json({ stories }));
 });
 
+//get stories that a user created/is a collaborator on
+router.get('/mine', verifyToken, async (req, res) => {
+  try{
+    const result = await Stories.findMine(req.user.id);
+    res.status(200).json(result);
+  } catch(err){
+    console.log(err);
+    res.status(500).json({message: 'Error retrieving stories.'})
+  }
+});
+
 //get story
 router.get('/:id', findStory, (req, res) => {
   Stories.getById(req.params.id)
