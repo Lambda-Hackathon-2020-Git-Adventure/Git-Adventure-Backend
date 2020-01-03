@@ -19,8 +19,8 @@ exports.up = function(knex) {
             .inTable('users')
             .onUpdate('CASCADE')
             .onDelete('CASCADE');
-        tbl.integer('video');
-        tbl.integer('image');
+        tbl.varchar('video');
+        tbl.varchar('image');
         tbl.boolean('first')
             .defaultTo(false);
 
