@@ -54,7 +54,7 @@ function getCollaborators(id) {
 
 async function add(story) {
   try{
-      const [id] = await db('stories')
+      const id = await db('stories')
       .insert(story);
       return getById(id)
   }catch(err){
