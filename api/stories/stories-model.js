@@ -33,6 +33,7 @@ module.exports = {
 function getAll() {
   return db('stories')
     .join('users', 'users.id', 'stories.creator')
+    .whereRaw(`stories.published == ${true}`)
     .select('stories.id', 'users.username as creator', 'stories.title','stories.description','stories.image')
 }
 
