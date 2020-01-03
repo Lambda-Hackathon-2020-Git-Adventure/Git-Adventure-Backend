@@ -19,7 +19,7 @@ function findById(id){
 
 async function addNode(node){
     const [id] = await db('decisions')
-        .insert(node);
+        .insert(node, 'id');
     
     return findById(id);
 }
@@ -42,7 +42,7 @@ async function addNodeAndConnect(parent_id, node){
 async function connectNode({parent_id, child_id}){
     try{
         const [id] = await db('decisions_children')
-        .insert({parent_id, child_id});
+        .insert({parent_id, child_id}, 'id');
 
         return getNodeParentsChildren(parent_id);
     }catch(err){
