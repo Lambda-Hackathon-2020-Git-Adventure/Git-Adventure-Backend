@@ -26,7 +26,8 @@ module.exports = {
   addUser,
   removeUser,
   findCollaborator,
-  findFirst
+  findFirst,
+  findMine
 }
 
 function getAll() {
@@ -95,6 +96,21 @@ function findCollaborator(userId, storyId) {
 function findFirst(id) {
   return db('decisions')
     .where({story_id: id, first: true})
-    .select('name','text','author_id','video','image')
+    .select('id','name','text','author_id','video','image')
     .first()
+}
+
+async function findMine(user_id){
+    const result = await Promise.all([
+      //get stories a user created
+      db('stories')
+      .where({creator: user_id}),
+      //get stories that a user is a collaborator for
+      db('collaborators as c')
+      .where({'c.collaborator': user_id})
+      .join('stories as s', 'c.story', 's.id')
+      .select('s.*')
+    ]);
+    const [createdStories, collaboratingOn] = result;
+    return {createdStories, collaboratingOn};
 }
