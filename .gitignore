@@ -1,3 +1,6 @@
+# db3
+/data/auth.db3
+
 # Logs
 logs
 *.log

@@ -13,8 +13,6 @@ exports.up = function(knex) {
             .notNullable()
         tbl.string('description', 9001)
         tbl.varchar('image');
-        tbl.boolean('published')
-            .defaultTo(false);
     });
 };
 

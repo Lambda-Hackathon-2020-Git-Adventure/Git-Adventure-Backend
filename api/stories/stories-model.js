@@ -33,13 +33,12 @@ module.exports = {
 function getAll() {
   return db('stories')
     .join('users', 'users.id', 'stories.creator')
-    .whereRaw(`stories.published == ${true}`)
     .select('stories.id', 'users.username as creator', 'stories.title','stories.description','stories.image')
 }
 
 function getById(id) {
   return db('stories')
-    .whereRaw(`stories.id == ${id}`)
+    .where({'stories.id': id})
     .join('users', 'users.id', 'stories.creator')
     .select('stories.id', 'users.username as creator', 'stories.title','stories.description','stories.image')
     .first();
@@ -47,15 +46,21 @@ function getById(id) {
 
 function getCollaborators(id) {
   return db('collaborators as c')
-    .whereRaw(`c.story == ${id}`)
+    .where({'c.story': id})
     .join('users as u', 'u.id', 'c.collaborator')
     .select('u.username')
 }
 
 async function add(story) {
-  const [id] = await db('stories')
-    .insert(story);
-  return getById(id)
+  try{
+      const [id] = await db('stories')
+      .insert(story, 'id');
+      return getById(id)
+  }catch(err){
+    console.log(err);
+    throw err;
+  }
+  
 }
 
 async function edit(id, story) {
@@ -79,7 +84,7 @@ function remove(id) {
 
 function addUser(collaborator) {
   return db('collaborators')
-    .insert(collaborator)
+    .insert(collaborator, 'id')
 }
 
 function removeUser(userId, storyId) {
@@ -104,13 +109,16 @@ function findFirst(id) {
 async function findMine(user_id){
     const result = await Promise.all([
       //get stories a user created
-      db('stories')
-      .where({creator: user_id}),
+      db('stories as s')
+      .where({'s.creator': user_id})
+      .join('users as u', 's.creator', 'u.id')
+      .select('s.id', 's.title', 's.description', 'u.username as creator', 's.image'),
       //get stories that a user is a collaborator for
       db('collaborators as c')
       .where({'c.collaborator': user_id})
       .join('stories as s', 'c.story', 's.id')
-      .select('s.*')
+      .join('users as u', 'c.collaborator', 'u.id')
+      .select('s.id', 's.title', 's.description', 'u.username as creator', 's.image')
     ]);
     const [createdStories, collaboratingOn] = result;
     return {createdStories, collaboratingOn};
