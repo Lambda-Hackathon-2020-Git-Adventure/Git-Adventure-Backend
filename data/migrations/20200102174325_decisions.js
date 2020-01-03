@@ -23,7 +23,8 @@ exports.up = function(knex) {
         tbl.varchar('image');
         tbl.boolean('first')
             .defaultTo(false);
-
+        tbl.integer('timer')
+            .unsigned();
     })
 
     .createTable('decisions_children', tbl => {
